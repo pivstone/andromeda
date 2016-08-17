@@ -38,17 +38,17 @@ An unofficial docker distribution project.
 	subject_prefix = '[django-andromeda]'
 	```
 
-3. rename django secret key file
+3. rename django SECRET KEY file
 
 	> mv /path/to/andromeda/etc/key.txt.example /path/to/andromeda/etc/key.txt
  
-4. generate a secret key for django
+4. generate a SECRET KEY for django
 
 	see [django SECRET_KEY](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SECRET_KEY)
 
 5. install dependency
 
-	Recommend use [virtualenv](https://pypi.python.org/pypi/virtualenv) to isolate your Python dependency environment,
+	Recommend using [virtualenv](https://pypi.python.org/pypi/virtualenv) to isolate your Python dependency environment,
 
 	> pip install -r requirements/prodn.txt
 
@@ -61,13 +61,13 @@ An unofficial docker distribution project.
 
 * Dev Environment 
 
-	if just use in dev env,use `runserver`
+	Please use `runserver`，if just use it in developmenent environment,
 
 	> python manage.py runserver 
 
 * Production Environment
 
-	Recommend use [Gunicorn](http://gunicorn.org) as a web container for django ,[why not use runserver in prodoction environment](https://docs.djangoproject.com/en/1.10/ref/django-admin/#runserver)
+	Recommend using [Gunicorn](http://gunicorn.org) as a web container for django ,[why not use runserver in prodoction environment](https://docs.djangoproject.com/en/1.10/ref/django-admin/#runserver)
 
 	> gunicorn andromeda.wsgi -w 8 -b 0.0.0.0:8000
  
