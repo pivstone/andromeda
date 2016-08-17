@@ -1,5 +1,5 @@
 
-# Docker Distribution Python Version (unofficially) 
+# Docker Distribution Python Version
 
 An unofficial docker distribution project.
 
@@ -122,7 +122,7 @@ server {
 * Upload Temp Blob GC
 * Auth?
 
-## Some Else:
+## somethings else:
 
 Blobs 的 GC，Docker 官方短期内也不支持， 本质原因是 Docker Distribution 设计的时候，无状态化处理、分布式改造都是依赖于 Storage，如果 Storage 是分布式的，每一个独立的 Registry 就天然的满足分布式的情况，但当需要对于无用的 Blobs 回收的情况下，Docker 官方就无能为力，这个是 Storage 层的领域。
 
