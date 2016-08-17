@@ -142,8 +142,9 @@ class BlobsUploadsInit(APIView):
             raise exceptions.NameInvalidException()
 
         response = http.HttpResponse(status=202)
+        upload_id = storage.create_blob(name)
         response['Location'] = request.scheme + "://" + request.get_host() + request.get_full_path() + upload_id
-        response['Docker-Upload-UUID'] = storage.create_blob(name)
+        response['Docker-Upload-UUID'] = upload_id
         response['Range'] = '0-0'
         return response
 
