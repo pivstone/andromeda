@@ -18,7 +18,7 @@ A unofficially docker distribution projects.
 
 1. rename configuration file
  
-> mv /path/to/andromeda/etc/andromeda.ini.example /path/to/andromeda/etc/andromeda.ini
+	> mv /path/to/andromeda/etc/andromeda.ini.example  /path/to/andromeda/etc/andromeda.ini
  
  
 2. modify configuration file
@@ -40,43 +40,43 @@ subject_prefix = '[django-andromeda]'
 
 3. rename django secret key file
 
-> mv /path/to/andromeda/etc/key.txt.example /path/to/andromeda/etc/key.txt
+	> mv /path/to/andromeda/etc/key.txt.example /path/to/andromeda/etc/key.txt
  
 4. generate a secret key for django
 
-see [django SECRET_KEY](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SECRET_KEY)
+	see [django SECRET_KEY](https://docs.djangoproject.com/en/1.10/ref/settings/#std:setting-SECRET_KEY)
 
 5. install dependency
 
-Recommend use [virtualenv](https://pypi.python.org/pypi/virtualenv) to isolate your Python dependency environment,
+	Recommend use [virtualenv](https://pypi.python.org/pypi/virtualenv) to isolate your Python dependency environment,
 
-> pip install -r requirements/prodn.txt
+	> pip install -r requirements/prodn.txt
 
 6. modify nginx config file
 
-reference: /path/to/andromeda/etc/nginx.conf
+	reference: /path/to/andromeda/etc/nginx.conf
 
 
 # Run
 
 * Dev Environment 
 
-if just use in dev env,use `runserver`
+	if just use in dev env,use `runserver`
 
-> python manage.py runserver 
+	> python manage.py runserver 
 
 * Production Environment
 
-Recommend use [Gunicorn](http://gunicorn.org) as a web container for django ,[why not use runserver in prodoction environment](https://docs.djangoproject.com/en/1.10/ref/django-admin/#runserver)
+	Recommend use [Gunicorn](http://gunicorn.org) as a web container for django ,[why not use runserver in prodoction environment](https://docs.djangoproject.com/en/1.10/ref/django-admin/#runserver)
 
-> gunicorn andromeda.wsgi -w 8 -b 0.0.0.0:8000
+	> gunicorn andromeda.wsgi -w 8 -b 0.0.0.0:8000
  
 
 # Test Unit
 
-> pip install tox
+	install tox
 
-> tox
+	> tox
 
 ## Nginx 配置说明：
 
@@ -137,9 +137,3 @@ Blobs 的回收的困难原因是，Docker Distribution 在存储 Layers 的时�
 
 
 
-#### [Docker Register Spec. V2](https://github.com/docker/distribution/tree/master/docs/spec)	
-
-* 傻逼 Docker 宣称的断点上传和下载都是假的
-* 垃圾 Docker Spec 中规定的 Mount 是假的，相关Blob 资源不存在情况下，都是重新上传数据。
-* 逗逼 Docker 发上传 Image 时发现某个 Layers 自己上传过，但相关资源已经 404 的情况下，会自作主张的加入 Mount 的参数。然而语义上 资源已经不存在了，你要如何 Mount？
-    即便 资源返回 200，表明存在了，Docker 就什么也不做。直接上传 Manifest 文件，于是 Spec 中的 Mount 毫无意义！
