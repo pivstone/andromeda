@@ -27,7 +27,7 @@ requirements_txt = open('./requirements/production.txt')
 requirements = [line for line in requirements_txt]
 
 setup(name='andromeda',
-      version='1.0',
+      version='0.2',
       description='Docker Distributions V2 Python Version',
       author=__author__,
       author_email='pivstone@gmail.com',
