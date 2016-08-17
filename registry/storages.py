@@ -88,8 +88,14 @@ class FileSystemPathSpec(object):
 
 
 class FileSystemStorage(object):
+    """
+    File based Storage
+    """
     def __init__(self):
         self.path_spec = FileSystemPathSpec()
+
+    def __getattr__(self, item):
+        return getattr(self.path_spec, item)
 
     def get_blob(self, digest):
         """

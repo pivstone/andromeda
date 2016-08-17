@@ -5,7 +5,7 @@ from django import http
 from django.http import HttpResponse
 from registry.decorators import digest_hash
 from registry.parsers import ManifestV1Parser, ManifestV2Parser
-from registry import SCHEMA_V2_2, SCHEMA_V2_1, exceptions, signals
+from registry import SCHEMA_V2_2, SCHEMA_V2_1, exceptions
 from registry.manifests import Manifest
 from registry.storages import storage
 from rest_framework.views import APIView
@@ -143,7 +143,7 @@ class BlobsUploadsInit(APIView):
 
         response = http.HttpResponse(status=202)
         upload_id = storage.create_blob(name)
-        response['Location'] = request.scheme + "://" + request.get_host() + request.get_full_path() + upload_id
+        response['Location'] = request.get_full_path() + upload_id
         response['Docker-Upload-UUID'] = upload_id
         response['Range'] = '0-0'
         return response
@@ -164,7 +164,7 @@ class BlobsUploads(APIView):
         response = HttpResponse(status=202)
         response['Range'] = "0-%s" % length
         response['Docker-Upload-UUID'] = uuid
-        response['Location'] = request.scheme + "://" + request.get_host() + request.get_full_path()
+        response['Location'] = request.get_host() + request.get_full_path()
         return response
 
     @digest_hash()
@@ -178,7 +178,7 @@ class BlobsUploads(APIView):
         storage.commit(name, uuid, client_digest)
         response = HttpResponse(status=204)
         response['Docker-Upload-UUID'] = uuid
-        response['Location'] = request.scheme + "://" + request.get_host() + request.get_full_path()
+        response['Location'] = request.get_host() + request.get_full_path()
         return response
 
     def get(self, request, name=None, uuid=None):
@@ -189,7 +189,7 @@ class BlobsUploads(APIView):
     def post(self, request, name=None, uuid=None):
         response = HttpResponse(status=204)
         response['Docker-Upload-UUID'] = uuid
-        response['Location'] = request.scheme + "://" + request.get_host() + request.get_full_path()
+        response['Location'] = request.get_host() + request.get_full_path()
         return response
 
 
