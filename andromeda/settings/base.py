@@ -40,7 +40,6 @@ INSTALLED_APPS = (
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'registry.middleware.ExceptionsHandleMiddleware',
-    'registry.middleware.Oauth2TokenMiddleware',
     'registry.middleware.CustomHeaderMiddleware',
 )
 
