@@ -1,7 +1,7 @@
 
 # Docker Distribution Python Version (unofficially) 
 
-A unofficially docker distribution projects.
+An unofficial docker distribution project.
 
 # Stage
 !Beta
@@ -9,7 +9,7 @@ A unofficially docker distribution projects.
 # Dependency:
 * Python 3
 * Django
-* Django Restful Framework
+* Django Rest Framework
 * ecdsa
 * Nginx
 
