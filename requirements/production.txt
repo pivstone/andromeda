@@ -1,0 +1,2 @@
+-r base.txt # include base.txt file
+gunicorn==19.3.0

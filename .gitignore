@@ -81,9 +81,22 @@ celerybeat-schedule
 # virtualenv
 venv/
 ENV/
+bin/
+include/
+lib/
 
 # Spyder project settings
 .spyderproject
 
 # Rope project settings
 .ropeproject
+
+*.DS_Store
+
+tmp/
+pip-selfcheck.json
+
+.sqlite3
+
+etc/*.ini
+etc/*.txt
