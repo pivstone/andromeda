@@ -23,20 +23,20 @@ A unofficially docker distribution projects.
  
 2. modify configuration file
 
-```ini
-[storage]
-repo_dir=tmp/v2/repo  # reposities storage path
-blob_dir=tmp/v2/blob  # blob storage path
-
-
-
-[email]    # Report Email Settings
-host = smtp.xxx.com
-port = 465
-user = django@xxx.com
-password = password
-subject_prefix = '[django-andromeda]'
-```
+	```ini
+	[storage]
+	repo_dir=tmp/v2/repo  # reposities storage path
+	blob_dir=tmp/v2/blob  # blob storage path
+	
+	
+	
+	[email]    # Report Email Settings
+	host = smtp.xxx.com
+	port = 465
+	user = django@xxx.com
+	password = password
+	subject_prefix = '[django-andromeda]'
+	```
 
 3. rename django secret key file
 
