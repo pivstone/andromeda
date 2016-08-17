@@ -1,0 +1,12 @@
+[storage]
+repo_dir=tmp/v2/repo
+blob_dir=tmp/v2/blob
+
+
+
+[email]
+host = smtp.XXX.com
+port = 465
+user = django@xxx.com
+password = password
+subject_prefix = '[django-andromeda]'

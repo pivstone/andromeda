@@ -1,0 +1,9 @@
+[program:andromeda]
+command=/opt/andromeda/venv.sh /opt/andromeda gunicorn andromeda.wsgi -w 8 -b 0.0.0.0:8000 --access-logfile=/var/log/supervisor/andromeda.access.log
+autorestart=true
+directory=/opt/andromeda
+user=andromeda
+redirect_stderr=true
+stdout_logfile=/var/log/supervisor/andromeda.log
+stdout_logfile_maxbytes=0
+

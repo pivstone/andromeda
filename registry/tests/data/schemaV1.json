@@ -1,0 +1,80 @@
+{
+   "schemaVersion": 1,
+   "name": "my",
+   "tag": "latest",
+   "architecture": "amd64",
+   "fsLayers": [
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:802d2a9c64e8f556e510b4fe6c5378b9d49d8335a766d156ef21c7aeac64c9d6"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:a3ed95caeb02ffe68cdd9fd84406680ae93d633cb16422d00e8a7c22955b46d4"
+      },
+      {
+         "blobSum": "sha256:06ba8e23299fcf9dd9efb3c5acd4c9d03badac5392953001c75d38197113a63a"
+      },
+      {
+         "blobSum": "sha256:d1562c23a8aa4913a2fc720a3c478121f45d26597b58bbf9a29238276ca420a7"
+      },
+      {
+         "blobSum": "sha256:2ee5ed28ffa762104505295c3c256c52a87fe8af0114b9e0198e9036495e10b8"
+      },
+      {
+         "blobSum": "sha256:e110a4a1794126ef308a49f2d65785af2f25538f06700721aad8283b81fdfa58"
+      }
+   ],
+   "history": [
+      {
+         "v1Compatibility": "{\"architecture\":\"amd64\",\"config\":{\"Hostname\":\"4c573a7cf4a3\",\"Domainname\":\"\",\"User\":\"\",\"AttachStdin\":false,\"AttachStdout\":false,\"AttachStderr\":false,\"ExposedPorts\":{\"5000/tcp\":{}},\"Tty\":false,\"OpenStdin\":false,\"StdinOnce\":false,\"Env\":[\"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\"],\"Cmd\":[\"/etc/docker/registry/config.yml\"],\"Image\":\"sha256:e9ae67f877e14bbe51094efb2a4603583c9c367c88700004478ff8a5fe5d9b97\",\"Volumes\":{\"/var/lib/registry\":{}},\"WorkingDir\":\"\",\"Entrypoint\":[\"/entrypoint.sh\"],\"OnBuild\":[],\"Labels\":{}},\"container\":\"ea4eeb6bb1ab1a5567ac41f151a93376fb4b1770fb03102328038792e43daa0f\",\"container_config\":{\"Hostname\":\"4c573a7cf4a3\",\"Domainname\":\"\",\"User\":\"\",\"AttachStdin\":false,\"AttachStdout\":false,\"AttachStderr\":false,\"ExposedPorts\":{\"5000/tcp\":{}},\"Tty\":false,\"OpenStdin\":false,\"StdinOnce\":false,\"Env\":[\"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\"],\"Cmd\":[\"/bin/sh\",\"-c\",\"#(nop) CMD [\\\"/etc/docker/registry/config.yml\\\"]\"],\"Image\":\"sha256:e9ae67f877e14bbe51094efb2a4603583c9c367c88700004478ff8a5fe5d9b97\",\"Volumes\":{\"/var/lib/registry\":{}},\"WorkingDir\":\"\",\"Entrypoint\":[\"/entrypoint.sh\"],\"OnBuild\":[],\"Labels\":{}},\"created\":\"2016-07-28T21:42:20.664720891Z\",\"docker_version\":\"1.10.3\",\"id\":\"ad8da6d14f6d4f97931bfcd1912b16e3fca28e1abf354b4c58a8a7ab3b8a80c2\",\"os\":\"linux\",\"parent\":\"94c689ffd50bb15be96b3b56296087547ce9e0c990d2d35bfd8ada8bdf62731f\",\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"94c689ffd50bb15be96b3b56296087547ce9e0c990d2d35bfd8ada8bdf62731f\",\"parent\":\"79a50c6b6f411c47698d4ccd239695713e1b3ab1146e757d47de36616745a4f0\",\"created\":\"2016-07-28T21:42:20.042135321Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop) ENTRYPOINT \\u0026{[\\\"/entrypoint.sh\\\"]}\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"79a50c6b6f411c47698d4ccd239695713e1b3ab1146e757d47de36616745a4f0\",\"parent\":\"8d1f9ff6843f0b4c3c59b7bdf36732193815644a1f1f01b5903021f1629fef34\",\"created\":\"2016-07-28T21:42:19.375869498Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop) COPY file:7b57f7ab1a8cf85c00768560fffc926543a60c9c9f7a2b172767dcc9a3203394 in /entrypoint.sh\"]}}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"8d1f9ff6843f0b4c3c59b7bdf36732193815644a1f1f01b5903021f1629fef34\",\"parent\":\"5366f93a80afd522f086da7131457e93d52fe0373976f6eb8c203859aacd23ef\",\"created\":\"2016-07-28T21:42:18.444477781Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop) EXPOSE 5000/tcp\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"5366f93a80afd522f086da7131457e93d52fe0373976f6eb8c203859aacd23ef\",\"parent\":\"33e9a84661e79548d110df113eff0b007b806adf6bd396fd9c412c2416bff943\",\"created\":\"2016-07-28T21:42:17.829167894Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop) VOLUME [/var/lib/registry]\"]},\"throwaway\":true}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"33e9a84661e79548d110df113eff0b007b806adf6bd396fd9c412c2416bff943\",\"parent\":\"664daba008e59cbbeb5e5ea22e6641cf27a8a71ee44e23a555b22e691f56e9c3\",\"created\":\"2016-07-28T21:42:17.204387715Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop) COPY file:6c4758d509045dc45381fa2df2e7ffcc661afcaa29805c75f8f1976f2b016db8 in /etc/docker/registry/config.yml\"]}}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"664daba008e59cbbeb5e5ea22e6641cf27a8a71ee44e23a555b22e691f56e9c3\",\"parent\":\"d912f6ed534e2d3ff110558d40782959e314169be32971e34d1f1d62b9c33524\",\"created\":\"2016-07-28T21:42:16.318480073Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop) COPY file:881b1af7dc369c3a2f32c6a97da3be4bcbec468a4e67188fb84968da810b8591 in /bin/registry\"]}}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"d912f6ed534e2d3ff110558d40782959e314169be32971e34d1f1d62b9c33524\",\"parent\":\"9b7301678506516b9a3ccda253d50765a6182c6f0f3098ec1db9265dbf1e1f69\",\"created\":\"2016-06-23T22:02:26.608252309Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c set -ex     \\u0026\\u0026 apk add --no-cache ca-certificates apache2-utils\"]}}"
+      },
+      {
+         "v1Compatibility": "{\"id\":\"9b7301678506516b9a3ccda253d50765a6182c6f0f3098ec1db9265dbf1e1f69\",\"created\":\"2016-06-23T19:55:18.048565927Z\",\"container_config\":{\"Cmd\":[\"/bin/sh -c #(nop) ADD file:852e9d0cb9d906535af512a89339fc70b2873a0f94defbcbe41cd44942dd6ac8 in /\"]}}"
+      }
+   ],
+   "signatures": [
+      {
+         "header": {
+            "jwk": {
+               "crv": "P-256",
+               "kid": "PMB2:C76D:2HZV:F42C:WVH2:OSEE:LNWC:CBMK:T3D5:BHPD:Q6WX:QUSL",
+               "kty": "EC",
+               "x": "q8WnUHk3EdLVjf_2uiwSZDN95V_-FvHW13YfnsPYBmA",
+               "y": "QVS_Sh6Gjxo2LIR6thBZbpSRGQ62jCDu6HkkebRQ99k"
+            },
+            "alg": "ES256"
+         },
+         "signature": "pb1c2pWPDdwtNVKdyHSPM-3mjeVihLH1aI-7bD0-i1n-aZY3K8MntlEN2bn-0aNksQcDwklPtnjgtAl1RnB-2g",
+         "protected": "eyJmb3JtYXRMZW5ndGgiOjU3MTIsImZvcm1hdFRhaWwiOiJDbjAiLCJ0aW1lIjoiMjAxNi0wOC0wOFQwOTowMDo0OFoifQ"
+      }
+   ]
+}

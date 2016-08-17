@@ -1,0 +1,4 @@
+Django==1.9.3
+djangorestframework==3.3.2
+setuptools==21.2.1
+ecdsa==0.13
