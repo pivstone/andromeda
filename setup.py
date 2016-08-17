@@ -6,19 +6,12 @@ __author__ = 'pivstone'
 
 
 def get_packages(package):
-    """
-    Return root package and all sub-packages.
-    """
-    return [dirpath
-            for dirpath, dirnames, filenames in os.walk(package)
-            if os.path.exists(os.path.join(dirpath, '__init__.py'))]
+    return [path
+            for path, names, files in os.walk(package)
+            if os.path.exists(os.path.join(path, '__init__.py'))]
 
 
 def get_package_data(package):
-    """
-    Return all files under the root package, that are not in a
-    package themselves.
-    """
     walk = [(dir_path.replace(package + os.sep, '', 1), file_names)
             for dir_path, dir_names, file_names in os.walk(package)
             if not os.path.exists(os.path.join(dir_path, '__init__.py'))]
@@ -34,16 +27,15 @@ requirements_txt = open('./requirements/production.txt')
 requirements = [line for line in requirements_txt]
 
 setup(name='andromeda',
-      version='1.1',
-      description='Docker Registry V2 Python Version',
+      version='1.0',
+      description='Docker Distributions V2 Python Version',
       author=__author__,
       author_email='pivstone@gmail.com',
       packages=get_packages('andromeda'),
       package_data=get_package_data('andromeda'),
-      classifiers=['Development Status :: 3 - Alpha',
+      classifiers=['Development Status :: 3 - Beta',
                    'Intended Audience :: Developers',
                    'Programming Language :: Python :: 3.5',
-                   'Programming Language :: Python :: Implementation :: CPython',
                    'Operating System :: OS Independent',
                    'Topic :: Utilities'
                    ],
