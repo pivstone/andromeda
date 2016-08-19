@@ -164,7 +164,7 @@ class BlobsUploads(APIView):
         response = HttpResponse(status=202)
         response['Range'] = "0-%s" % length
         response['Docker-Upload-UUID'] = uuid
-        response['Location'] = request.get_host() + request.get_full_path()
+        response['Location'] = request.get_full_path()
         return response
 
     @digest_hash()
@@ -178,7 +178,7 @@ class BlobsUploads(APIView):
         storage.commit(name, uuid, client_digest)
         response = HttpResponse(status=204)
         response['Docker-Upload-UUID'] = uuid
-        response['Location'] = request.get_host() + request.get_full_path()
+        response['Location'] = request.get_full_path()
         return response
 
     def get(self, request, name=None, uuid=None):
@@ -189,7 +189,7 @@ class BlobsUploads(APIView):
     def post(self, request, name=None, uuid=None):
         response = HttpResponse(status=204)
         response['Docker-Upload-UUID'] = uuid
-        response['Location'] = request.get_host() + request.get_full_path()
+        response['Location'] = request.get_full_path()
         return response
 
 
