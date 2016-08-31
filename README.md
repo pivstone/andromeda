@@ -107,7 +107,7 @@ server {
     }
 
     location /download/blobs {
-       alias /Users/pivstone/workspace/***REMOVED***/andromeda/tmp/v2/blob;   # Blobs 文件地址
+       alias /Users/andromeda/tmp/v2/blob;   # Blobs 文件地址
        expires 1d;  # Blobs 内容级别不变，可以考虑半永久缓存
     }
 
