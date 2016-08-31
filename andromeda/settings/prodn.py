@@ -11,7 +11,7 @@ DATABASES = {
     }
 }
 # EMail Block
-ADMINS = (('wangxiaolei', 'wangxiaolei@***REMOVED***.com'), ('kocio', 'kocio@vip.qq.com'), ('fandibin', 'fandibin@***REMOVED***.com'),)
+ADMINS = ( ('pivstone', 'pivstone@gmail.com'),)
 
 EMAIL_HOST = config['email']['host']
 EMAIL_PORT = config['email']['port']
