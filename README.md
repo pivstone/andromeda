@@ -1,9 +1,11 @@
 
 # Docker Distribution Python Version
 
-An unofficial docker distribution project.
 
 [![Build Status](https://travis-ci.org/pivstone/andromeda.svg?branch=master)](https://travis-ci.org/pivstone/andromeda)
+[![Coverage Status](https://coveralls.io/repos/github/pivstone/andromeda/badge.svg?branch=master)](https://coveralls.io/github/pivstone/andromeda?branch=master)
+
+An unofficial docker distribution project.
 
 
 # Stage
