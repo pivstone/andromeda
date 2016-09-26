@@ -148,7 +148,10 @@ class BlobsUploadsInit(APIView):
         if len(name) > 256:
             raise exceptions.NameInvalidException()
         upload_id = storage.create_blob(name)
-        response = http.HttpResponse(status=202)
+        status = 202
+        if "mount" in request.GET:
+            status = 201
+        response = http.HttpResponse(status=status)
         response['Location'] = request.get_full_path() + upload_id
         response['Docker-Upload-UUID'] = upload_id
         response['Range'] = '0-0'

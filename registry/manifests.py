@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 import json
+import logging
 from collections import OrderedDict
 from django.utils import six
 from registry import EMPTY_BLOB_DIGEST, exceptions, crypto, CONFIG_TYPE, LAYER_TYPE, signals
@@ -8,6 +9,8 @@ from registry.storages import storage
 from hashlib import sha256
 
 __author__ = 'pivstone'
+
+LOG = logging.getLogger(__name__)
 
 
 def digest_verify(digest, size):
@@ -19,15 +22,17 @@ def digest_verify(digest, size):
     """
     blob_length = storage.get_blob_length(digest)
     if not blob_length:
+        LOG.warn("manifest verify failed cause:layer length is zero")
         raise exceptions.BlobUnknownException(detail={"digest": digest})
-    if size != blob_length:
+    if not storage.check_digest(digest):
+        LOG.warn("manifest verify failed cause:layer digest invalid")
         raise exceptions.ManifestUnverifiedException()
 
 
 class AbstractManifest(object):
-    def __init__(self, data_string, name, reference):
+    def __init__(self, data_string, data, name, reference):
         self.data_string = data_string
-        self.data = json.loads(self.data_string)
+        self.data = data
         self.name = name
         self.reference = reference
         self.verify()
@@ -56,7 +61,7 @@ class AbstractManifest(object):
         并做 相关 Layers 的Links 操作
         :return:
         """
-
+        data_string = self.data_string
         if not isinstance(data_string, six.binary_type):
             data_string = data_string.encode("utf-8")
         manifest_digest = storage.save_manifest(data_string)
@@ -86,11 +91,14 @@ class ManifestV2(AbstractManifest):
         config = self.data['config']
         digest_verify(config['digest'], config['size'])
         if config['mediaType'] != CONFIG_TYPE:
+            LOG.warn("manifest verify failed cause:config layer mediaType invalid")
             raise exceptions.ManifestInvalidException(detail={"config": "mediaType invalid"})
         for layer in self.data['layers']:
             if layer['mediaType'] != LAYER_TYPE:
+                LOG.warn("manifest verify failed cause:layer mediaType invalid")
                 raise exceptions.ManifestInvalidException()
             digest_verify(layer['digest'], layer['size'])
+        return True
 
     @property
     def layers(self):
@@ -151,10 +159,12 @@ class ManifestV1(AbstractManifest):
     def verify(self):
         for layer in self.data['fsLayers']:
             if not storage.get_blob_length(layer['blobSum']):
+                LOG.warn("manifest verify failed cause:length error")
                 raise exceptions.BlobUnknownException(detail={"digest": layer['blobSum']})
 
         v = crypto.Verifier(self.data_string)
         if not v.verify():
+            LOG.warn("manifest verify failed cause:manifest sign verify error")
             raise exceptions.ManifestUnverifiedException()
         return True
 
@@ -167,14 +177,17 @@ class ManifestV1(AbstractManifest):
 
 
 class Manifest(object):
-    def __init__(self, data, name, reference):
+    def __init__(self, data_string, name, reference):
         self.name = name
         self.reference = reference
+        if isinstance(data_string, six.binary_type):
+            data_string = data_string.decode()
+        data = json.loads(data_string)
         self.version = data['schemaVersion']
         if self.version == 2:
-            self.manifest = ManifestV2(data, name, reference)
+            self.manifest = ManifestV2(data_string, data, name, reference)
         else:
-            self.manifest = ManifestV1(data, name, reference)
+            self.manifest = ManifestV1(data_string, data, name, reference)
 
     def save(self):
         self.manifest.save()

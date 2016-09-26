@@ -91,6 +91,7 @@ class FileSystemStorage(object):
     """
     File based Storage
     """
+
     def __init__(self):
         self.path_spec = FileSystemPathSpec()
 
@@ -160,12 +161,18 @@ class FileSystemStorage(object):
         return self.get_blob(digest)
 
     def create_blob(self, name):
+        """
+        :CN 创建上传文件的blob
+        :EN create upload temp blob
+        :param name:
+        :return:
+        """
         import uuid
         upload_id = uuid.uuid4().__str__()
-        file_name = self.path_spec.get_upload_path(name, uuid)
+        file_name = self.path_spec.get_upload_path(name, upload_id)
         dir_name = os.path.dirname(file_name)
         if not os.path.exists(dir_name):
-            os.mkdir(dir_name)
+            os.makedirs(dir_name)
         signals.blob_upload_init.send(sender=self.__class__, name=name, uuid=upload_id)
         return upload_id
 
@@ -210,7 +217,22 @@ class FileSystemStorage(object):
         with open(file_name, "rb") as f2:
             for chunk in iter(lambda: f2.read(4096), b''):
                 hash_func.update(chunk)
-        return hash_func.digest().hex()
+        return hash_func.hexdigest()
+
+    def check_digest(self, digest):
+        """
+        :CN 检测 Blob的 digest 值
+        :EN check blob file's digest value
+        :param digest:
+        :return:
+        """
+        hash_method, digest_value = digest.split(":")
+        hash_func = {"sha256": hashlib.sha256, "sha1": hashlib.sha1}[hash_method]()
+        file_name = self.path_spec.get_blob_path(digest)
+        with open(file_name, "rb") as f2:
+            for chunk in iter(lambda: f2.read(4096), b''):
+                hash_func.update(chunk)
+        return digest_value == hash_func.hexdigest().lower()
 
     def commit(self, name, uuid, digest):
         """
@@ -245,7 +267,7 @@ class FileSystemStorage(object):
         """
         hash_fn = hashlib.sha256()
         hash_fn.update(data)
-        digest = "sha256:" + hash_fn.digest().hex()
+        digest = "sha256:" + hash_fn.hexdigest()
         target_name = self.path_spec.get_blob_path(digest)
         dir_name = os.path.dirname(target_name)
         if not os.path.exists(dir_name):

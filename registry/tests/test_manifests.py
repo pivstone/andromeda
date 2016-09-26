@@ -1,37 +1,21 @@
 import json
-import shutil
+
 from django.conf import settings
-from django.test import TestCase
-import os
-from registry.manifests import AbstractManifest, ManifestV1
+from django.test import TestCase, override_settings
+from registry.manifests import AbstractManifest, ManifestV1, ManifestV2
 
 __author__ = 'pivstone'
 
 
+@override_settings(
+    BLOB_DIR="registry/tests/data/v2/blob"
+)
 class ManifestTestCase(TestCase):
     def setUp(self):
         """
         clear & prepare data
         :return:
         """
-        if os.path.exists(settings.REPO_DIR):
-            shutil.rmtree(settings.REPO_DIR)
-
-        if os.path.exists(settings.BLOB_DIR):
-            shutil.rmtree(settings.BLOB_DIR)
-
-        from registry.storages import storage
-
-        def create_digest(self, digest):
-            target_name = self.path_spec.get_blob_path(digest)
-            dir_name = os.path.dirname(target_name)
-            if not os.path.exists(dir_name):
-                os.makedirs(dir_name)
-            with open(target_name, "a") as f:
-                f.write("null")
-
-        storage.create_digest = create_digest
-        self.storage = storage
 
     def test_abstract_manifests_not_implements(self):
         """
@@ -40,28 +24,49 @@ class ManifestTestCase(TestCase):
         :return:
         """
         with self.assertRaises(NotImplementedError):
-            manifest = AbstractManifest("{}", None, None)
+            manifest = AbstractManifest("{}", {}, None, None)
             manifest.layers()
             manifest.verify()
             manifest.convert()
 
     def test_manifest_v1_verify(self):
+        """
+        :CN 测试 V1 版 Manifest 的Verify
+        :EN test manifest v1 verify method
+        :return:
+        """
+        print(settings.BLOB_DIR)
         with open("./registry/tests/data/schemaV1.json") as f:
             content = f.read()
             data = json.loads(content)
-            for layer in data['fsLayers']:
-                self.storage.create_digest(self.storage, layer['blobSum'])
-            manifest = ManifestV1(content, "my", "latest")
+            manifest = ManifestV1(content, data, "my", "latest")
 
             self.assertTrue(manifest.verify())
 
-    def tearDown(self):
+    def test_manifest_v2_verify(self):
         """
-        clean data
+        :CN 测试 V2 版 Manifest 的Verify
+        :EN test manifest v2 verify method
         :return:
         """
-        if os.path.exists(settings.REPO_DIR):
-            shutil.rmtree(settings.REPO_DIR)
+        with open("./registry/tests/data/schemaV2.json") as f:
+            content = f.read()
+            data = json.loads(content)
+            manifest = ManifestV2(content, data, "my", "latest")
+            self.assertTrue(manifest.verify())
 
-        if os.path.exists(settings.BLOB_DIR):
-            shutil.rmtree(settings.BLOB_DIR)
+    def test_manifest_v2_convert(self):
+        """
+        :CN 测试 manifest v2 to v1 的转换
+        :EN  test convert method for manifest v2 schema v2 to schema v1
+        :return:
+        """
+        with open("./registry/tests/data/schemaV2.json") as f:
+            content = f.read()
+            data = json.loads(content)
+            manifest = ManifestV2(content, data, "my", "latest")
+
+            manifest_v1_string = manifest.convert()
+            manifest_v1_data = json.loads(manifest_v1_string)
+            manifest_v1 = ManifestV1(manifest_v1_string, manifest_v1_data, "my", "latest")
+            self.assertTrue(manifest_v1.verify())
