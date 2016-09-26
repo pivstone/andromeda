@@ -135,7 +135,7 @@ class ManifestV2(AbstractManifest):
 
             # 构建 v1Compatibility 内容
             h.update(blob_sum.encode() + b"  " + parent_id.encode())
-            v1_id = h.digest().hex()
+            v1_id = h.hexdigest().lower()
             v1_layers = OrderedDict()
             v1_layers["id"] = v1_id
             v1_layers["created"] = layer['created']
