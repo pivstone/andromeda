@@ -8,10 +8,13 @@ python:
   - "pypy"
 # command to install dependencies
 install:
-  - pip install -r requirements/production.txt
+  - pip install -r requirements/production.txt --use-mirrors
+  - pip install coveralls
 # command to run tests
 script:
   - cp etc/key.txt.example etc/key.txt
   - cp etc/andromeda.ini.example etc/andromeda.ini
   - python manage.py migrate
-  - python manage.py test
+  - coverage run --source=python manage.py test
+after_success:
+  coveralls
