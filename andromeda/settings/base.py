@@ -114,6 +114,6 @@ CUSTOM_HEADERS = {
 config = configparser.ConfigParser()
 config.read("etc/andromeda.ini")
 
-REPO_DIR = config['storage']['repo_dir']
+REPO_DIR = config.get('storage', 'repo_dir')
 
-BLOB_DIR = config['storage']['blob_dir']
+BLOB_DIR = config.get('storage', 'blob_dir')
