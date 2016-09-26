@@ -8,7 +8,7 @@ python:
   - "pypy"
 # command to install dependencies
 install:
-  - pip install -r requirements/production.txt --use-mirrors
+  - pip install -r requirements/production.txt
   - pip install coveralls
 # command to run tests
 script:
