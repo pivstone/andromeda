@@ -5,7 +5,7 @@ from django import http
 from django.http import HttpResponse
 from registry.decorators import digest_hash
 from registry.parsers import ManifestV1Parser, ManifestV2Parser
-from registry import SCHEMA_V2_2, SCHEMA_V2_1, exceptions
+from registry import exceptions
 from registry.manifests import Manifest
 from registry.storages import storage
 from rest_framework.views import APIView
@@ -26,6 +26,8 @@ class Root(APIView):
 
 
 class Tags(APIView):
+    scope = "repository"
+
     def get(self, request, name=None):
         """
         Tags List View
@@ -37,6 +39,8 @@ class Tags(APIView):
 
 
 class Manifests(APIView):
+    scope = "repository"
+
     @digest_hash()
     def get(self, request, name=None, reference=None):
         """
@@ -66,25 +70,24 @@ class Manifests(APIView):
     @digest_hash()
     def put(self, request, name=None, reference=None):
         """
-        Manifests Views
+        Create Manifests Views
         :param request: Http 请求对象
         :param name: 镜像名
         :return:
         """
-        data = request.data
         schema = request.META.get("CONTENT_TYPE", None)
         if not schema:
             raise exceptions.RegistryException()
-        if schema not in (SCHEMA_V2_2, SCHEMA_V2_1,):
+        if schema not in (ManifestV1Parser.media_type, ManifestV2Parser.media_type,):
             raise exceptions.UnsupportedException()
-        manifest = Manifest(data, name, reference)
+        manifest = Manifest(request.read(), name, reference)
         manifest.save()
         return http.JsonResponse(data={"name": name, "reference": reference})
 
     @digest_hash()
     def delete(self, request, name=None, reference=None):
         """
-        Manifests Views
+        Delete Manifests Views
         :param request: Http 请求对象
         :param name: 镜像名
         :return:
@@ -93,6 +96,8 @@ class Manifests(APIView):
 
 
 class Blobs(APIView):
+    scope = "repository"
+
     def get(self, request, name=None, digest=None):
         """
         Blod Down Views
@@ -130,6 +135,8 @@ class Blobs(APIView):
 
 
 class BlobsUploadsInit(APIView):
+    scope = "repository"
+
     def post(self, request, name=None):
         """
          /v2/<name>/blobs/uploads/
@@ -140,9 +147,8 @@ class BlobsUploadsInit(APIView):
         """
         if len(name) > 256:
             raise exceptions.NameInvalidException()
-
-        response = http.HttpResponse(status=202)
         upload_id = storage.create_blob(name)
+        response = http.HttpResponse(status=202)
         response['Location'] = request.get_full_path() + upload_id
         response['Docker-Upload-UUID'] = upload_id
         response['Range'] = '0-0'
@@ -150,6 +156,8 @@ class BlobsUploadsInit(APIView):
 
 
 class BlobsUploads(APIView):
+    scope = "repository"
+
     @digest_hash()
     def patch(self, request, name=None, uuid=None):
         """
@@ -194,6 +202,8 @@ class BlobsUploads(APIView):
 
 
 class Catalog(APIView):
+    scope = "registry"
+
     def get(self, request):
         """
         catalog view

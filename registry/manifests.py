@@ -25,8 +25,9 @@ def digest_verify(digest, size):
 
 
 class AbstractManifest(object):
-    def __init__(self, data, name, reference):
-        self.data = data
+    def __init__(self, data_string, name, reference):
+        self.data_string = data_string
+        self.data = json.loads(self.data_string)
         self.name = name
         self.reference = reference
         self.verify()
@@ -44,10 +45,10 @@ class AbstractManifest(object):
         Manifest 校验
         :return:
         """
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def convert(self):
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def save(self):
         """
@@ -55,22 +56,23 @@ class AbstractManifest(object):
         并做 相关 Layers 的Links 操作
         :return:
         """
-        data_string = json.dumps(self.data, indent=4).encode("utf-8")
+
         if not isinstance(data_string, six.binary_type):
             data_string = data_string.encode("utf-8")
         manifest_digest = storage.save_manifest(data_string)
         # save tags
-        current_tag_path = storage.get_tag_current_path(name=self.name, tag_name=self.reference)
+        current_tag_path = storage.path_spec.get_tag_current_path(name=self.name, tag_name=self.reference)
         storage.link(manifest_digest, current_tag_path)
-        tag_index_path = storage.get_tag_index_path(name=self.name, tag_name=self.reference, digest=manifest_digest)
+        tag_index_path = storage.path_spec.get_tag_index_path(name=self.name, tag_name=self.reference,
+                                                              digest=manifest_digest)
         storage.link(manifest_digest, tag_index_path)
 
         # Save reference
-        reference_path = storage.get_reference_path(name=self.name, digest=manifest_digest)
+        reference_path = storage.path_spec.get_reference_path(name=self.name, digest=manifest_digest)
         storage.link(manifest_digest, reference_path)
 
         for layer in self.layers:
-            layer_path = storage.get_layer_path(name=self.name, digest=layer)
+            layer_path = storage.path_spec.get_layer_path(name=self.name, digest=layer)
             storage.link(layer, layer_path)
 
 
@@ -80,6 +82,7 @@ class ManifestV2(AbstractManifest):
     """
 
     def verify(self):
+
         config = self.data['config']
         digest_verify(config['digest'], config['size'])
         if config['mediaType'] != CONFIG_TYPE:
@@ -150,9 +153,10 @@ class ManifestV1(AbstractManifest):
             if not storage.get_blob_length(layer['blobSum']):
                 raise exceptions.BlobUnknownException(detail={"digest": layer['blobSum']})
 
-        v = crypto.Verifier(json.dumps(self.data))
+        v = crypto.Verifier(self.data_string)
         if not v.verify():
             raise exceptions.ManifestUnverifiedException()
+        return True
 
     @property
     def layers(self):
