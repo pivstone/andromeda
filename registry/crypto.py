@@ -17,11 +17,14 @@ def _decode(value):
     :param value:
     :return:
     """
+
     length = len(value) % 4
     if length in (2, 3,):
         value += (4 - length) * "="
     elif length != 0:
         raise ValueError("Invalid base64 string")
+    if not isinstance(value, six.binary_type):
+        value = value.encode()
     return base64.urlsafe_b64decode(value)
 
 
