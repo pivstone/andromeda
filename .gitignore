@@ -94,6 +94,7 @@ lib/
 *.DS_Store
 
 tmp/
+test/
 pip-selfcheck.json
 
 .sqlite3

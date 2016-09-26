@@ -1,5 +1,5 @@
 
-# Docker Distribution Python Version
+# Docker Registry V2 Python Version
 
 [![Python Support Status](https://img.shields.io/badge/python-3.4%2C%203.5%2C%20pypy-blue.svg)]()
 [![Build Status](https://travis-ci.org/pivstone/andromeda.svg?branch=master)](https://travis-ci.org/pivstone/andromeda)
@@ -122,7 +122,7 @@ server {
 ==Note== 由于需要 Nginx 在前端，拼接好 Chunked 请求的所有内容，所以Nginx 前端机可以有一定的内存要求
 
 
-## Roadmap
+## Road map
 * Web Hook
 * Upload Temp Blob GC
 * Auth?
