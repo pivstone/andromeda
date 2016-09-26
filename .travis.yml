@@ -1,6 +1,7 @@
 language: python
 sudo: required
 cache: pip
+
 python:
   - "3.4"
   - "3.5"
@@ -16,6 +17,6 @@ script:
   - cp etc/key.txt.example etc/key.txt
   - cp etc/andromeda.ini.example etc/andromeda.ini
   - python manage.py migrate
-  - coverage run --source=python manage.py test
+  - coverage run --source=manage.py test
 after_success:
   coveralls
