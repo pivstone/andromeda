@@ -11,6 +11,10 @@ python:
   - "pypy"
 # command to install dependencies
 install:
-  - pip install -r requirements/test.txt
+  - pip install -r requirements/production.txt
 # command to run tests
-script: tox
+script:
+  - cp etc/key.txt.example etc/key.txt
+  - cp etc/andromeda.ini.example etc/andromeda.ini
+  - python manage.py migrate
+  - python manage.py test
