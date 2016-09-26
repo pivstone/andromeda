@@ -3,6 +3,7 @@ import json
 import base64
 import datetime
 from django.utils import six
+from registry import six as project_six
 from ecdsa import VerifyingKey, NIST256p, BadSignatureError, SigningKey
 from ecdsa.util import number_to_string
 from hashlib import sha256, sha512, sha384
@@ -119,7 +120,7 @@ def jws_sign(payload):
     protected_header = {
         "formatLength": len(payload) - 2,
         "formatTail": _encode(payload[-2:]).decode(),
-        "time": datetime.datetime.now().timestamp() * 1000
+        "time": project_six.convert2timestamp(datetime.datetime.now())
     }
 
     protected_string = _encode(json.dumps(protected_header))
