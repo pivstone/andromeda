@@ -1,7 +1,7 @@
 
 # Docker Distribution Python Version
 
-
+[![Python Support Status](https://img.shields.io/badge/python-3.4%2C%203.5%2C%20pypy-blue.svg)]()
 [![Build Status](https://travis-ci.org/pivstone/andromeda.svg?branch=master)](https://travis-ci.org/pivstone/andromeda)
 [![Coverage Status](https://coveralls.io/repos/github/pivstone/andromeda/badge.svg?branch=master)](https://coveralls.io/github/pivstone/andromeda?branch=master)
 
