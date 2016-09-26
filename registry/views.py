@@ -92,7 +92,7 @@ class Manifests(APIView):
         return http.JsonResponse(data={"name": name, "reference": reference})
 
 
-class Blob(APIView):
+class Blobs(APIView):
     def get(self, request, name=None, digest=None):
         """
         Blod Down Views

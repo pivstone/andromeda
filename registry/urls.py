@@ -17,13 +17,13 @@ from django.conf.urls import url
 
 from registry import views
 
-name_patterns = '(?P<name>[a-z0-9]+(?:[._-][a-z0-9]+)*)'
+name_patterns = '(?P<name>[a-z0-9]+(?:[._\/-][a-z0-9]+)*)'
 reference_patterns = "(?P<reference>[a-z0-9]+(:|.|-)?[a-z0-9]+)"
 urlpatterns = [
     url(r'^$', views.Root.as_view()),
     url(r'^%s/tags/list$' % name_patterns, views.Tags.as_view()),
     url(r'^%s/manifests/%s$' % (name_patterns, reference_patterns), views.Manifests.as_view()),
-    url(r'^%s/blobs/(?P<digest>sha256:[a-z0-9]{64})$' % name_patterns, views.Blob.as_view()),
+    url(r'^%s/blobs/(?P<digest>sha256:[a-z0-9]{64})$' % name_patterns, views.Blobs.as_view()),
     url(r'^%s/blobs/uploads/$' % name_patterns, views.BlobsUploadsInit.as_view()),
     url(r'^%s/blobs/uploads/(?P<uuid>[a-z0-9]+(?:[._-][a-z0-9]+)*)$' % name_patterns, views.BlobsUploads.as_view()),
     url(r'^_catalog', views.Catalog.as_view()),

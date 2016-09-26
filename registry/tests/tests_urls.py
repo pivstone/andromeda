@@ -19,46 +19,16 @@ class UrlsRouterTest(TestCase):
         for url in self.urls_list:
             self.assertEqual(200, self.client.get(url).status_code)
 
-    def test_p(self):
-        class Solution(object):
-            def longestPalindrome(self, s):
-                """
-                :type s: str
-                :rtype: str
-                """
-                if not s:
-                    return s
-                if len(s)==1:
-                    return s
-                def center(t,left,right):
-                    while(left>=0 and right<len(t) and t[left]==t[right]):
-                        left-=1
-                        right+=1
-                    return right-left-1
-
-                half=(len(s)+1)//2-1
-
-                def half_range(area):
-                    start = 0
-                    end = 0
-                    for i in area:
-                        le=center(s,i,i)
-                        le2=center(s,i,i+1)
-                        lex=max(le,le2)
-                        if lex>end-start:
-                            end=i+lex//2
-                            start=i-(lex-1)//2
-                    return start,end
-                s1,e1=half_range(range(half,-1,-1))
-                s2,e2=half_range(range(half,len(s)))
-                if e1-s1 > e2-s2:
-                    start=s1
-                    end=e1
-                else:
-                    start = s2
-                    end = e2
-                return s[start:end+1]
-
-
-        s = Solution()
-        print(s.longestPalindrome("bbb"))
+    def test_docker_api_resolver(self):
+        """
+        检查Docker API 的 URLs
+        :return:
+        """
+        from django.core.urlresolvers import resolve
+        self.assertEqual(resolve("/v2/my/my/tags/list").view_name, 'registry.views.Tags')
+        self.assertEqual(resolve("/v2/").view_name, 'registry.views.Root')
+        self.assertEqual(resolve("/v2/_catalog").view_name, 'registry.views.Catalog')
+        self.assertEqual(resolve("/v2/my/my/manifests/latest").view_name, 'registry.views.Manifests')
+        self.assertEqual(resolve(
+            "/v2/my/my/blobs/sha256:802d2a9c64e8f556e510b4fe6c5378b9d49d8335a766d156ef21c7aeac64c9d6").view_name,
+                         'registry.views.Blobs')
