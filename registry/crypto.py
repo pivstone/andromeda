@@ -48,7 +48,7 @@ class SignKey(object):
         sign_key = SigningKey.generate(curve=NIST256p, hashfunc=sha256)
         h = sha256()
         h.update(sign_key.get_verifying_key().to_string())
-        dig = h.digest().hex().upper()[:48]
+        dig = h.hexdigest().upper()[:48]
         kid = ""
         for i in range(0, len(dig) // 4):
             kid += dig[i * 4:i * 4 + 4]
@@ -105,7 +105,7 @@ class DigestCheck(object):
         digest_func = {"sha256": sha256, "sha512": sha512, "sha384": sha384}[digest_method.lower()]
         h = digest_func()
         h.update(self.content)
-        result = h.digest().hex() == digest_value.lower()
+        result = h.hexdigest() == digest_value.lower()
         if raise_exception and not result:
             raise exceptions.DigestInvalidException()
         return result
