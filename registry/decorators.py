@@ -22,7 +22,7 @@ def digest_hash():
             if response.status_code == 200:
                 builder = sha256()
                 builder.update(response.content)
-                digest = "sha256:%s" % builder.digest().hex()
+                digest = "sha256:%s" % builder.hexdigest().lower()
                 response['Etag'] = digest
                 response['Docker-Content-Digest '] = digest
             return response
