@@ -1,3 +1,4 @@
+import logging
 from django.utils import six
 from importlib import import_module
 from registry import exceptions, signals
@@ -7,6 +8,8 @@ import hashlib
 import os
 
 __author__ = 'pivstone'
+
+LOG = logging.getLogger(__name__)
 
 
 class FileSystemPathSpec(object):
@@ -155,6 +158,7 @@ class FileSystemStorage(object):
             tag_current_path = self.path_spec.get_tag_current_path(name, reference)
             tag_current_path += "/link"
             if not os.path.exists(tag_current_path):
+                LOG.warn("path %s not found:" % tag_current_path)
                 raise exceptions.ManifestUnknownException(detail={"Tags": reference})
             with open(tag_current_path, "r") as f:
                 digest = f.read()
