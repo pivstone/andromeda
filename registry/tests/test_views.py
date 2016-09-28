@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.test import TestCase, Client, override_settings
+import os
 from registry.storages import storage
 
 __author__ = 'pivstone'
@@ -16,6 +17,17 @@ class BlobsUploadTest(TestCase):
         self.data = b"hello"
         self.name = "test"
         self.uuid = "123"
+
+    def test_init_blobs_upload(self):
+        response = self.client.post("/v2/%s/blobs/uploads/" % self.name, data="",
+                                    content_type="application/octet-stream",
+                                    HTTP_RANGE="bytes=0-0")
+        self.assertEqual(202, response.status_code)
+        upload_uuid = response._headers['docker-upload-uuid'][1]
+        file_name = storage.path_spec.get_upload_path(self.name, upload_uuid)
+        # todo: change to storage method
+        dir_name = os.path.dirname(file_name)
+        self.assertTrue(os.path.exists(dir_name))
 
     def test_patch_blobs_upload(self):
         """
