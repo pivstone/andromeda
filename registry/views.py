@@ -57,15 +57,20 @@ class Manifests(APIView):
         if ManifestV1Parser.media_type in accept_list and ManifestV2Parser.media_type not in accept_list:
             schema_v2 = False
         manifest = json.loads(content)
-        if schema_v2:
-            response = http.JsonResponse(data=manifest)
-            response["content-Type"] = manifest['mediaType']
-            return response
-        else:
-            mani = Manifest(manifest, name=name, reference=reference)
+        # 本地存储的 manifest version
+        manifest_version = 1 if "mediaType" not in manifest else 2
+
+        if not schema_v2 and manifest_version != 1:
+            mani = Manifest(content, name=name, reference=reference)
             response = http.HttpResponse(content=mani.get_v1_manifest())
             response["content-Type"] = ManifestV1Parser.media_type
             return response
+
+        if schema_v2 and manifest_version == 1:
+            raise exceptions.ManifestUnsupportedException()
+        response = http.HttpResponse(content=content)
+        response["content-Type"] = ManifestV1Parser.media_type
+        return response
 
     @digest_hash()
     def put(self, request, name=None, reference=None):
