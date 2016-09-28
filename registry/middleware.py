@@ -26,5 +26,5 @@ class ExceptionsHandleMiddleware(object):
 
     def process_exception(self, request, exception):
         if isinstance(exception, RegistryException):
-            response = http.JsonResponse(status=exception.status, data=exception.__str__())
+            response = http.JsonResponse(status=exception.status, data=exception.errors())
             return response

@@ -10,14 +10,14 @@ class RegistryException(Exception):
     def __init__(self, detail=None):
         self.detail = detail or {}
 
-    def __str__(self):
-        return {
-            "errors": [{
-                "code": self.code,
-                "message": self.message,
-                "detail": self.detail
-            }]
-        }.__str__()
+    def errors(self):
+        return {"errors": [{"code": self.code, "message": self.message, "detail": self.detail}]}
+
+
+class ManifestUnsupportedException(RegistryException):
+    status = 415
+    code = "MANIFEST UNSUPPORTED"
+    message = "manifest unsupported"
 
 
 class UnsupportedException(RegistryException):
