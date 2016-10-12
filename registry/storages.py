@@ -6,6 +6,7 @@ from django import http
 from django.conf import settings
 import hashlib
 import os
+from registry.utils import ensure_dir
 
 __author__ = 'pivstone'
 
@@ -174,9 +175,7 @@ class FileSystemStorage(object):
         import uuid
         upload_id = uuid.uuid4().__str__()
         file_name = self.path_spec.get_upload_path(name, upload_id)
-        dir_name = os.path.dirname(file_name)
-        if not os.path.exists(dir_name):
-            os.makedirs(dir_name)
+        ensure_dir(file_name)
         signals.blob_upload_init.send(sender=self.__class__, name=name, uuid=upload_id)
         return upload_id
 
@@ -250,9 +249,7 @@ class FileSystemStorage(object):
         """
         file_name = self.path_spec.get_upload_path(name, uuid)
         target_name = self.path_spec.get_blob_path(digest)
-        dir_name = os.path.dirname(target_name)
-        if not os.path.exists(dir_name):
-            os.makedirs(dir_name)
+        ensure_dir(target_name)
         os.rename(file_name, target_name)
         signals.blob_upload_complete.send(sender=self.__class__, name=name, uuid=uuid, digest=digest)
 
@@ -273,27 +270,23 @@ class FileSystemStorage(object):
         hash_fn.update(data)
         digest = "sha256:" + hash_fn.hexdigest()
         target_name = self.path_spec.get_blob_path(digest)
-        dir_name = os.path.dirname(target_name)
-        if not os.path.exists(dir_name):
-            os.makedirs(dir_name)
+        ensure_dir(target_name)
         with open(target_name, "w+b") as f:
             f.write(data)
         return digest
 
-    def link(self, digest, target):
+    def link(self, digest, target_name):
         """
         Link Blob 到指定目录
         :param digest: sha256：XXX 格式的
         :param target:
         :return:
         """
-        target += "/link"
+        target_name += "/link"
         if not isinstance(digest, six.binary_type):
             digest = digest.encode("utf-8")
-        dir_name = os.path.dirname(target)
-        if not os.path.exists(dir_name):
-            os.makedirs(dir_name)
-        with open(target, "w+b")as f:
+        ensure_dir(target_name)
+        with open(target_name, "w+b")as f:
             f.write(digest)
 
 
