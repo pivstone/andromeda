@@ -1,6 +1,5 @@
 [storage]
-repo_dir=tmp/v2/repo
-blob_dir=tmp/v2/blob
+data_dir=tmp/v2/repo
 
 
 
