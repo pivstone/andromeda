@@ -5,7 +5,7 @@ MAINTAINER PivStone<PivStone@gmail.com>
 EXPOSE 5511
 
 ENV APP_HOME /srv/andromeda
-    DJANGO_SETTINGS_MODULE andromeda.settings.prodn
+ENV DJANGO_SETTINGS_MODULE andromeda.settings.prodn
 
 COPY . ${APP_HOME}
 VOLUME ${APP_HOME}/etc
