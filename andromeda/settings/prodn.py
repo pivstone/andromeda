@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from .base import *
 
 __author__ = 'xbeco'
@@ -13,16 +14,15 @@ DATABASES = {
 # EMail Block
 ADMINS = ( ('pivstone', 'pivstone@gmail.com'),)
 
-EMAIL_HOST = config['email']['host']
-EMAIL_PORT = config['email']['port']
-EMAIL_HOST_USER = config['email']['user']
-EMAIL_HOST_PASSWORD = config['email']['password']
-EMAIL_USE_SSL = config['email']['use_ssl']
-EMAIL_SUBJECT_PREFIX = config['email']['subject_prefix']
+EMAIL_HOST = config.get('email','host')
+EMAIL_PORT = config.get('email','port')
+EMAIL_HOST_USER = config.get('email','user')
+EMAIL_HOST_PASSWORD = config.get('email','password')
+EMAIL_SUBJECT_PREFIX = config.get('email','subject_prefix')
 
-SERVER_EMAIL = config['email']['user']
+SERVER_EMAIL = config.get('email','user')
 
-DEFAULT_FROM_EMAIL = config['email']['user']
+DEFAULT_FROM_EMAIL = config.get('email','user')
 
 LOGGING = {
     'version': 1,
