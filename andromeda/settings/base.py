@@ -117,6 +117,8 @@ config.read("etc/andromeda.ini")
 
 DATA_DIR = config.get('storage', 'data_dir')
 
-REPO_DIR = "%s/repo" % DATA_DIR
+ROOT_DIR = os.path.dirname(BASE_DIR)
 
-BLOB_DIR = "%s/blob" % DATA_DIR
+REPO_DIR = "%s/%s/repo" % (ROOT_DIR,DATA_DIR)
+
+BLOB_DIR = "%s/%s/blob" % (ROOT_DIR,DATA_DIR)
