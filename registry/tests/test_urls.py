@@ -1,3 +1,4 @@
+# coding=utf-8
 from django.test import TestCase, Client
 
 __author__ = 'pivstone'
@@ -27,6 +28,7 @@ class UrlsRouterTest(TestCase):
         from django.core.urlresolvers import resolve
         self.assertEqual(resolve("/v2/my/my/tags/list").view_name, 'registry.views.Tags')
         self.assertEqual(resolve("/v2/").view_name, 'registry.views.Root')
+        self.assertEqual(resolve("/v2/my/my/manifests/0.1.2").view_name, 'registry.views.Manifests')
         self.assertEqual(resolve("/v2/_catalog").view_name, 'registry.views.Catalog')
         self.assertEqual(resolve("/v2/my/my/manifests/latest").view_name, 'registry.views.Manifests')
         self.assertEqual(resolve(

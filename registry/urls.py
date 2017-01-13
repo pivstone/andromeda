@@ -1,3 +1,4 @@
+# coding=utf-8
 """Capella URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -18,7 +19,8 @@ from django.conf.urls import url
 from registry import views
 
 name_patterns = '(?P<name>[a-z0-9]+(?:[._\/-][a-z0-9]+)*)'
-reference_patterns = "(?P<reference>[a-z0-9]+(:|.|-)?[a-z0-9]+)"
+# 参考 docker distribution 源码里的 reg
+reference_patterns = "(?P<reference>((?:(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])(?:(?:\.(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]))+)?(?::[0-9]+)?/)?[a-z0-9]+(?:(?:(?:[._]|__|[-]*)[a-z0-9]+)+)?(?:(?:/[a-z0-9]+(?:(?:(?:[._]|__|[-]*)[a-z0-9]+)+)?)+)?)(?::([\w][\w.-]{0,127}))?(?:@([A-Za-z][A-Za-z0-9]*(?:[-_+.][A-Za-z][A-Za-z0-9]*)*[:][[:xdigit:]]{32,}))?)"
 urlpatterns = [
     url(r'^$', views.Root.as_view()),
     url(r'^%s/tags/list$' % name_patterns, views.Tags.as_view()),

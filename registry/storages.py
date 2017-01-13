@@ -1,3 +1,4 @@
+# coding=utf-8
 import logging
 from django.utils import six
 from importlib import import_module
