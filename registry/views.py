@@ -1,3 +1,4 @@
+# coding=utf-8
 import json
 import logging
 
@@ -69,7 +70,7 @@ class Manifests(APIView):
         if schema_v2 and manifest_version == 1:
             raise exceptions.ManifestUnsupportedException()
         response = http.HttpResponse(content=content)
-        response["content-Type"] = ManifestV1Parser.media_type
+        response["content-Type"] = ManifestV2Parser.media_type
         return response
 
     @digest_hash()
