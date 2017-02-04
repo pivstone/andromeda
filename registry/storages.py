@@ -1,11 +1,13 @@
 # coding=utf-8
+from __future__ import unicode_literals
 import logging
-from django.utils import six
 from importlib import import_module
+import hashlib
+
+from django.utils import six
 from registry import exceptions, signals
 from django import http
 from django.conf import settings
-import hashlib
 import os
 from registry.utils import ensure_dir
 
@@ -59,17 +61,27 @@ class FileSystemPathSpec(object):
         """
         return "%s/%s/_uploads/%s/data" % (settings.REPO_DIR, name, uuid)
 
-    def get_blob_path(self, digest):
+    def get_blob_path(self, digest, name=None, ):
         """
         上传完成后的 blob 路径
         :param digest:
+        :param name: repository name
         :return:
         """
         hash_method, digest_value = digest.split(":")
         return "%s/%s/%s/%s/data" % (settings.BLOB_DIR, hash_method, digest_value[:2], digest_value)
 
-    def get_tag_path(self, name):
+    def get_tags_path(self, name):
         return "%s/%s/_manifests/tags" % (settings.REPO_DIR, name)
+
+    def get_tag_path(self, name, tag_name):
+        """
+        获取指定 tag 文件的路径
+        :param name: image name
+        :param tag_name: tag name
+        :return:
+        """
+        return "%s/%s/_manifests/tags/%s" % (settings.REPO_DIR, name, tag_name)
 
     def get_tag_current_path(self, name, tag_name):
         return "%s/%s/_manifests/tags/%s/current" % (settings.REPO_DIR, name, tag_name)
@@ -103,22 +115,28 @@ class FileSystemStorage(object):
     def __getattr__(self, item):
         return getattr(self.path_spec, item)
 
-    def get_blob(self, digest):
+    def get_blob(self, digest, name=None):
         """
         获取 blob 内容
         :param digest:
+        :param name:repository name
         :return:
         """
-        file_name = self.path_spec.get_blob_path(digest)
+        file_name = self.path_spec.get_blob_path(digest, name)
         if not os.path.exists(file_name):
             raise http.Http404()
         with open(file_name, "r") as f:
             return f.read()
 
-    def get_repositories(self, n=10, keyword=""):
+    def get_repositories(self, n=10, keyword="", prefix=None):
         found_path = []
         for root, sub, f in os.walk(settings.REPO_DIR):
+            LOG.debug("Storage found:%s,%s" % (root, sub))
             if "_layers" in sub:
+                if prefix:
+                    path = root[len(settings.REPO_DIR):]
+                    if not path.startswith(prefix):
+                        continue
                 if keyword:
                     if root.find(keyword) > 0:
                         found_path.append(root.replace(settings.REPO_DIR + "/", ""))
@@ -134,7 +152,7 @@ class FileSystemStorage(object):
         :param name:
         :return:
         """
-        tag_path = self.path_spec.get_tag_path(name)
+        tag_path = self.path_spec.get_tags_path(name)
         found_tags = []
         if not os.path.exists(tag_path):
             raise http.Http404()
@@ -143,6 +161,18 @@ class FileSystemStorage(object):
             if os.path.exists(f_path) and not os.path.isfile(f_path):
                 found_tags.append(f)
         return found_tags
+
+    def untag(self, name, tag_name):
+        """
+        取消 tag
+        :param name:
+        :param tag_name:
+        :return:
+        """
+        tag_path = self.path_spec.get_tag_path(name, tag_name)
+        if not os.path.exists(tag_path):
+            raise http.Http404()
+        os.remove(tag_path)
 
     def get_manifest(self, name, reference):
         """
@@ -160,7 +190,6 @@ class FileSystemStorage(object):
             tag_current_path = self.path_spec.get_tag_current_path(name, reference)
             tag_current_path += "/link"
             if not os.path.exists(tag_current_path):
-                LOG.warn("path %s not found:" % tag_current_path)
                 raise exceptions.ManifestUnknownException(detail={"Tags": reference})
             with open(tag_current_path, "r") as f:
                 digest = f.read()
@@ -223,16 +252,17 @@ class FileSystemStorage(object):
                 hash_func.update(chunk)
         return hash_func.hexdigest()
 
-    def check_digest(self, digest):
+    def check_digest(self, digest, name=None):
         """
         :CN 检测 Blob的 digest 值
         :EN check blob file's digest value
         :param digest:
+        :param name: repository name
         :return:
         """
         hash_method, digest_value = digest.split(":")
         hash_func = {"sha256": hashlib.sha256, "sha1": hashlib.sha1}[hash_method]()
-        file_name = self.path_spec.get_blob_path(digest)
+        file_name = self.path_spec.get_blob_path(digest, name)
         with open(file_name, "rb") as f2:
             for chunk in iter(lambda: f2.read(4096), b''):
                 hash_func.update(chunk)
@@ -249,45 +279,53 @@ class FileSystemStorage(object):
         :return:
         """
         file_name = self.path_spec.get_upload_path(name, uuid)
-        target_name = self.path_spec.get_blob_path(digest)
+        target_name = self.path_spec.get_blob_path(digest, name)
+        ensure_dir(file_name)
         ensure_dir(target_name)
         os.rename(file_name, target_name)
         signals.blob_upload_complete.send(sender=self.__class__, name=name, uuid=uuid, digest=digest)
 
-    def get_blob_length(self, digest):
-        file_name = self.path_spec.get_blob_path(digest)
+    def get_blob_length(self, digest, name=None):
+        """
+        获取Blob的长度
+        :param name:  repository name
+        :param digest:
+        :return:
+        """
+        file_name = self.path_spec.get_blob_path(digest, name)
         try:
             return os.stat(file_name).st_size
         except OSError:
             return None
 
-    def save_manifest(self, data):
+    def save_manifest(self, data, name=None):
         """
         保存 Manifest 内容
         :param data:
+        :param name: repository name
         :return:
         """
         hash_fn = hashlib.sha256()
         hash_fn.update(data)
         digest = "sha256:" + hash_fn.hexdigest()
-        target_name = self.path_spec.get_blob_path(digest)
+        target_name = self.path_spec.get_blob_path(digest, name)
         ensure_dir(target_name)
         with open(target_name, "w+b") as f:
             f.write(data)
         return digest
 
-    def link(self, digest, target_name):
+    def link(self, digest, target):
         """
         Link Blob 到指定目录
         :param digest: sha256：XXX 格式的
         :param target:
         :return:
         """
-        target_name += "/link"
+        target += "/link"
         if not isinstance(digest, six.binary_type):
             digest = digest.encode("utf-8")
-        ensure_dir(target_name)
-        with open(target_name, "w+b")as f:
+        ensure_dir(target)
+        with open(target, "w+b")as f:
             f.write(digest)
 
 

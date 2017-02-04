@@ -1,3 +1,4 @@
+# coding=utf-8
 from django.conf import settings
 from django.http import Http404
 from django.test import TestCase, override_settings
@@ -73,7 +74,7 @@ class StorageTestCase(TestCase):
         测试空 Repo 下 tags 的返回
         :return:
         """
-        tag_path = storage.path_spec.get_tag_path(self.repo_name)
+        tag_path = storage.path_spec.get_tags_path(self.repo_name)
         os.makedirs(tag_path)
         self.assertEqual([], storage.get_tags(self.repo_name))
 
@@ -82,6 +83,6 @@ class StorageTestCase(TestCase):
         测试 repo get tags 的返回
         :return:
         """
-        tag_path = storage.path_spec.get_tag_path(self.repo_name)
+        tag_path = storage.path_spec.get_tags_path(self.repo_name)
         os.makedirs(tag_path + "/" + self.tag_name)
         self.assertEqual([self.tag_name], storage.get_tags(self.repo_name))

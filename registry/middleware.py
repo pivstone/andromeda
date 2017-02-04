@@ -1,3 +1,4 @@
+# coding=utf-8
 from django import http
 from django.conf import settings
 from django.contrib.auth import authenticate
