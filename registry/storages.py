@@ -3,12 +3,16 @@ from __future__ import unicode_literals
 import logging
 from importlib import import_module
 import hashlib
+import shutil
+from io import open
+import os
 
 from django.utils import six
-from registry import exceptions, signals
 from django import http
+
 from django.conf import settings
-import os
+
+from registry import exceptions, signals
 from registry.utils import ensure_dir
 
 __author__ = 'pivstone'
@@ -128,7 +132,7 @@ class FileSystemStorage(object):
         with open(file_name, "r") as f:
             return f.read()
 
-    def get_repositories(self, n=10, keyword="", prefix=None):
+    def get_repositories(self, n=10, keyword=b"", prefix=None):
         found_path = []
         for root, sub, f in os.walk(settings.REPO_DIR):
             LOG.debug("Storage found:%s,%s" % (root, sub))
@@ -172,7 +176,7 @@ class FileSystemStorage(object):
         tag_path = self.path_spec.get_tag_path(name, tag_name)
         if not os.path.exists(tag_path):
             raise http.Http404()
-        os.remove(tag_path)
+        shutil.rmtree(tag_path)
 
     def get_manifest(self, name, reference):
         """
