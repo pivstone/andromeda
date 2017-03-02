@@ -61,6 +61,22 @@ An unofficial docker distribution project.
 
 	reference: /path/to/andromeda/etc/nginx.conf
 
+# docker-compose.yml 
+
+```yml
+version: "2"
+services:
+  app:
+    image:  pivstone/andromeda:latest
+    volumes:
+      - /srv/andromeda/etc:/srv/andromeda/etc
+      - /srv/andromeda/logs:/srv/andromeda/logs
+      - /srv/andromeda/data:/srv/andromeda/data
+    ports:
+      - 5511:5511
+    working_dir: /srv/andromeda
+    restart: always
+```
 
 # Run
 
@@ -83,7 +99,7 @@ An unofficial docker distribution project.
 
 	> tox
 
-## Nginx 配置说明：
+## Nginx Configuration：
 
 ```conf
 worker_processes auto;
@@ -118,27 +134,4 @@ server {
 
 }
 ```
-
-==Note== 由于需要 Nginx 在前端，拼接好 Chunked 请求的所有内容，所以Nginx 前端机可以有一定的内存要求
-
-
-## Road map
-* Web Hook
-* Upload Temp Blob GC
-* Auth?
-
-## Notes
-
-Blobs 的 GC，Docker 官方短期内也不支持， 本质原因是 Docker Distribution 设计的时候，无状态化处理、分布式改造都是依赖于 Storage，如果 Storage 是分布式的，每一个独立的 Registry 就天然的满足分布式的情况，但当需要对于无用的 Blobs 回收的情况下，Docker 官方就无能为力，这个是 Storage 层的领域。
-
-Blobs 的回收的困难原因是，Docker Distribution 在存储 Layers 的时候会通过 Layers 的 SHA256 的值来去除检查（理论上 SHA256 是唯一的），如果一个 Layers SHA 的值对应的文件存在在 Registry 上则 Docker Client 就不会重新上传这个文件了。但要删除一个 Blobs 的时候就出现了问题，什么时候这个Blobs 才是不再需要的，假如节点 A 发现 Blobs 无效了，准备删除，节点 B 上传的 Image 需要这个 Blobs，就会出现 Blobs 丢失问题。
-
-但不会收回 Blobs 的话 ，会导致 Blobs 仓库越来越大。
-
-官方给出的意见：
-1 使用引用计算器，但需要 Paxos 、Raft 之类的算法处理一致性和分布式锁的问题。相当复杂（还有一个 Docker 不想让 Registry 之间有通信，这样会让整个 System 变得复杂，难以维护）
-2 使用中心化数据库，使用数据库的事务来处理这个问题，（个人以为：Docker 不用这个是因为不想引入数据库，也不想使用文件系统以为的数据库）
-3 使用 World GC，即暂停所有的上传业务，来回收资源（如果可以像 12306 那样下限维护就好说）
-
-
 

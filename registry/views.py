@@ -4,12 +4,14 @@ import logging
 
 from django import http
 from django.http import HttpResponse
+
+from rest_framework.views import APIView
+
 from registry.decorators import digest_hash
 from registry.parsers import ManifestV1Parser, ManifestV2Parser
 from registry import exceptions
 from registry.manifests import Manifest
 from registry.storages import storage
-from rest_framework.views import APIView
 
 __author__ = 'pivstone'
 
@@ -60,7 +62,6 @@ class Manifests(APIView):
         manifest = json.loads(content)
         # 本地存储的 manifest version
         manifest_version = 1 if "mediaType" not in manifest else 2
-
         if not schema_v2 and manifest_version != 1:
             mani = Manifest(content, name=name, reference=reference)
             response = http.HttpResponse(content=mani.get_v1_manifest())
@@ -176,7 +177,6 @@ class BlobsUploads(APIView):
         :param name: 镜像名
         :return:
         """
-
         length = storage.save_full_upload(request, name, uuid)
         response = HttpResponse(status=202)
         response['Range'] = "0-%s" % length
