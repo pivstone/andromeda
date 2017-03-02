@@ -61,22 +61,7 @@ An unofficial docker distribution project.
 
 	reference: /path/to/andromeda/etc/nginx.conf
 
-# docker-compose.yml 
 
-```yml
-version: "2"
-services:
-  app:
-    image:  pivstone/andromeda:latest
-    volumes:
-      - /srv/andromeda/etc:/srv/andromeda/etc
-      - /srv/andromeda/logs:/srv/andromeda/logs
-      - /srv/andromeda/data:/srv/andromeda/data
-    ports:
-      - 5511:5511
-    working_dir: /srv/andromeda
-    restart: always
-```
 
 # Run
 
@@ -93,6 +78,23 @@ services:
 	> gunicorn andromeda.wsgi -w 8 -b 0.0.0.0:8000
  
 
+* Use Docker
+    Andromeda available in [Docker Hub](http://hub.docker.com/r/pivstone/andromeda/). You can run andromeda in docker via docker-compose
+    
+    ```yml
+    version: "2"
+    services:
+      app:
+        image:  pivstone/andromeda:latest
+        volumes:
+          - /srv/andromeda/etc:/srv/andromeda/etc
+          - /srv/andromeda/logs:/srv/andromeda/logs
+          - /srv/andromeda/data:/srv/andromeda/data
+        ports:
+          - 5511:5511
+        working_dir: /srv/andromeda
+        restart: always
+    ```
 # Test Unit
 
 	install tox
