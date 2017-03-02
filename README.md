@@ -79,6 +79,7 @@ An unofficial docker distribution project.
  
 
 * Use Docker
+
     Andromeda available in [Docker Hub](http://hub.docker.com/r/pivstone/andromeda/). You can run andromeda in docker via docker-compose
     
     ```yml
@@ -95,6 +96,7 @@ An unofficial docker distribution project.
         working_dir: /srv/andromeda
         restart: always
     ```
+
 # Test Unit
 
 	install tox
