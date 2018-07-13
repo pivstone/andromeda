@@ -1,2 +1,2 @@
 -r base.txt # include base.txt file
-gunicorn ~> 19.5.0
+gunicorn==19.9.0
