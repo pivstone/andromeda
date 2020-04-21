@@ -1,5 +1,5 @@
-Django==1.9.3
-djangorestframework==3.3.2
+Django==1.9.13
+djangorestframework==3.9.1
 setuptools==21.2.1
-ecdsa==0.13
+ecdsa==0.13.3
 python-jose==1.2.0
