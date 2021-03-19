@@ -1,4 +1,4 @@
 Django>=1.11.28
-djangorestframework==3.9.1
+djangorestframework==3.11.2
 setuptools==21.2.1
 ecdsa==0.13.3
